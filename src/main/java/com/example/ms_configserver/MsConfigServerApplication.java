@@ -12,6 +12,6 @@ cloud:
 config:
 server:
 git:
-uri: https://github.com/noetipo/UNAJIngSoftware.git
+uri: https://github.com/yucallohuanca/UNAJIngSoftware.git
 searchPaths: config-data
 default-label: main
