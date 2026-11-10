@@ -1,1 +1,17 @@
-spring.application.name=ms_config-server
+server:
+  port: 7071
+
+spring:
+  application:
+    name: config-server
+  security:
+    user:
+      name: root
+      password: 123456
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/yucallohuanca-coder/ms-config-server.git
+            searchPaths: src/main/config-data
+          default-label: main
