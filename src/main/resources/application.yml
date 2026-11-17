@@ -13,5 +13,5 @@ spring:
       server:
         git:
           uri: https://github.com/yucallohuanca-coder/ms-config-server.git
-            searchPaths: src/main/config-data
+          searchPaths: src/main/config-data
           default-label: main
