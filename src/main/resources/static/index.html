@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Config Server - Guía 2</title>
+<style>
+  body { font-family: Segoe UI, Arial, sans-serif; max-width: 860px; margin: 32px auto; padding: 0 16px; color: #1f2328; background: #fff; }
+  h1 { font-size: 24px; margin-bottom: 4px; }
+  p.sub { color: #59636e; margin-top: 0; }
+  h2 { font-size: 17px; margin-top: 28px; border-bottom: 1px solid #d1d9e0; padding-bottom: 6px; }
+  table { border-collapse: collapse; width: 100%; }
+  td, th { text-align: left; padding: 7px 10px; border-bottom: 1px solid #eaeef2; font-size: 14px; }
+  th { background: #f6f8fa; }
+  a { color: #0969da; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code { background: #f6f8fa; padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+  .ok { color: #1a7f37; font-weight: 600; }
+</style>
+</head>
+<body>
+<h1>ms-config-server <span class="ok">● activo</span></h1>
+<p class="sub">Guía práctica 2: Registro y descubrimiento con Eureka Server y Gateway Server · Puerto 7071</p>
+
+<h2>Configuración entregada por el Config Server</h2>
+<table>
+  <tr><th>Servicio</th><th>Link</th></tr>
+  <tr><td>ms-eureka-server</td><td><a href="/ms-eureka-server/development">/ms-eureka-server/development</a></td></tr>
+  <tr><td>ms-catalogo-service</td><td><a href="/ms-catalogo-service/development">/ms-catalogo-service/development</a></td></tr>
+  <tr><td>ms-gateway-server</td><td><a href="/ms-gateway-server/development">/ms-gateway-server/development</a></td></tr>
+</table>
+<p>Los microservicios leen esta configuración con <code>spring.config.import: optional:configserver:http://root:123456@localhost:7071</code>. Esa dirección es para los servicios, no para abrirla en el navegador.</p>
+
+<h2>Servicios</h2>
+<table>
+  <tr><th>Servicio</th><th>Puerto</th><th>Link</th></tr>
+  <tr><td>Eureka Server (panel)</td><td>8761</td><td><a href="http://localhost:8761">http://localhost:8761</a></td></tr>
+  <tr><td>ms-catalogo-service</td><td>8081</td><td><a href="http://localhost:8081/categoria">http://localhost:8081/categoria</a></td></tr>
+  <tr><td>Swagger del catálogo</td><td>8081</td><td><a href="http://localhost:8081/doc/swagger-ui.html">http://localhost:8081/doc/swagger-ui.html</a></td></tr>
+  <tr><td>ms-gateway-server</td><td>8080</td><td><a href="http://localhost:8080/categoria">http://localhost:8080/categoria</a></td></tr>
+</table>
+
+<h2>Pruebas a través del Gateway</h2>
+<table>
+  <tr><th>Petición</th><th>Llega a</th></tr>
+  <tr><td><a href="http://localhost:8080/categoria">GET /categoria</a></td><td>ms-catalogo-service (ruta declarada)</td></tr>
+  <tr><td><a href="http://localhost:8080/categoria/1">GET /categoria/1</a></td><td>ms-catalogo-service</td></tr>
+  <tr><td><a href="http://localhost:8080/ms-catalogo-service/categoria">GET /ms-catalogo-service/categoria</a></td><td>ms-catalogo-service (discovery locator)</td></tr>
+  <tr><td><a href="http://localhost:8080/doc/swagger-ui.html">Swagger vía Gateway</a></td><td>ms-catalogo-service</td></tr>
+  <tr><td>POST /categoria (Postman, Body raw JSON <code>{"nombre": "Línea blanca"}</code>)</td><td>crea una categoría</td></tr>
+</table>
+
+<h2>Orden de arranque</h2>
+<p>PostgreSQL → ms-config-server (7071) → ms-eureka-server (8761) → ms-catalogo-service (8081) → ms-gateway-server (8080). Espera unos 30 segundos antes de probar el Gateway.</p>
+</body>
+</html>
