@@ -7,6 +7,7 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
   instance:
     hostname: localhost
+    status-page-url-path: /categoria
 
 spring:
   cloud:
@@ -18,10 +19,29 @@ spring:
               enabled: true
               lower-case-service-id: true
           routes:
+            # http://localhost:8080 -> /categoria
+            - id: inicio
+              uri: no://op
+              predicates:
+                - Path=/
+              filters:
+                - RedirectTo=302, /categoria
+            # http://localhost:8080/categoria/ (barra final) -> /categoria
+            - id: categoria-barra-final
+              uri: no://op
+              predicates:
+                - Path=/categoria/
+              filters:
+                - RedirectTo=302, /categoria
             - id: ms-catalogo-service
               uri: lb://ms-catalogo-service
               predicates:
                 - Path=/categoria/**
+            # Swagger del catalogo a traves del Gateway
+            - id: ms-catalogo-service-docs
+              uri: lb://ms-catalogo-service
+              predicates:
+                - Path=/doc/**,/v3/api-docs/**
             - id: ms-producto-service
               uri: lb://ms-producto-service
               predicates:
